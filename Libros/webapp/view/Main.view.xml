@@ -1,0 +1,7 @@
+<mvc:View controllerName="Libros.Libros.controller.Main" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+    <Page id="page" title="Ejemplo">
+        <content>
+            <Text text="{Libros>/value/0/name}"></Text>
+        </content>
+    </Page>
+</mvc:View>

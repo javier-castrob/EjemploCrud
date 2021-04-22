@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="api"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Authors" EntityType="api.Authors">
+                    <NavigationPropertyBinding Path="book" Target="Books"/>
+                </EntitySet>
+                <EntitySet Name="Books" EntityType="api.Books">
+                    <NavigationPropertyBinding Path="author" Target="Authors"/>
+                </EntitySet>
+                <EntitySet Name="Inventory" EntityType="api.Inventory">
+                    <NavigationPropertyBinding Path="book" Target="Books"/>
+                </EntitySet>
+                <ActionImport Name="insertOrder" Action="api.insertOrder"/>
+                <ActionImport Name="modInv" Action="api.modInv"/>
+            </EntityContainer>
+            <EntityType Name="Authors">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="30"/>
+                <Property Name="countryBirth" Type="Edm.String" MaxLength="30"/>
+                <NavigationProperty Name="book" Type="api.Books">
+                    <ReferentialConstraint Property="book_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="book_ID" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Books">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="30"/>
+                <NavigationProperty Name="author" Type="api.Authors">
+                    <ReferentialConstraint Property="author_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="comments" Type="Edm.String" MaxLength="300"/>
+                <Property Name="autor_nombre" Type="Edm.String" MaxLength="30"/>
+                <Property Name="author_ID" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Inventory">
+                <Property Name="ID" Type="Edm.Int32"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="book" Type="api.Books">
+                    <ReferentialConstraint Property="book_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="amountBooks" Type="Edm.Int32"/>
+                <Property Name="price" Type="Edm.Decimal" Scale="2" Precision="3"/>
+                <Property Name="comments" Type="Edm.String" MaxLength="300"/>
+                <Property Name="name" Type="Edm.String" MaxLength="30"/>
+                <Property Name="author_name" Type="Edm.String" MaxLength="30"/>
+                <Property Name="countryBirth" Type="Edm.String" MaxLength="30"/>
+                <Property Name="book_ID" Type="Edm.Int32"/>
+            </EntityType>
+            <ComplexType Name="myBookShop_Stock">
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="amountBooks" Type="Edm.Int32"/>
+                <Property Name="price" Type="Edm.Decimal" Scale="2" Precision="3"/>
+                <Property Name="comments" Type="Edm.String" MaxLength="300"/>
+                <Property Name="book_ID" Type="Edm.Int32"/>
+            </ComplexType>
+            <Action Name="insertOrder" IsBound="false">
+                <Parameter Name="book" Type="Collection(api.myBookShop_Stock)" Nullable="false"/>
+                <ReturnType Type="Edm.String"/>
+            </Action>
+            <Action Name="modInv" IsBound="false">
+                <Parameter Name="book" Type="Edm.Int32"/>
+                <Parameter Name="amount" Type="Edm.Int32"/>
+                <ReturnType Type="Edm.String"/>
+            </Action>
+            <Annotations Target="api.Inventory/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.Inventory/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.Inventory/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.Inventory/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.myBookShop_Stock/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.myBookShop_Stock/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.myBookShop_Stock/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="api.myBookShop_Stock/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
